@@ -1,9 +1,3 @@
-Absolutely — here’s the complete, clean, professional README.md you can copy and paste directly into your GitHub repo.
-
-Save this as README.md in your project root (ai-buddy-for-kids/):
-
-⸻
-
 
 # 🤖 AI Buddy for Kids (WhatsApp + Gemini + Streamlit)
 
