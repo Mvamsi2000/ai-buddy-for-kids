@@ -1,0 +1,27 @@
+# 🔐 Secrets and Environment Configs
+.env
+*.json
+firebase-adminsdk*.json
+settings.json
+
+# 🐍 Python Cache Files
+*.pyc
+__pycache__/
+
+# 📦 Virtual Environments
+.venv/
+venv/
+
+# 🧪 Local SQLite Databases
+*.db
+backend/mood_logs.db
+
+# 🧪 Streamlit & Debug Artifacts
+dashboard/.streamlit/
+*.log
+
+# 🔄 OS/Editor Junk
+.DS_Store
+*.swp
+.idea/
+.vscode/
