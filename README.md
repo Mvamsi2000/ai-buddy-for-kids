@@ -160,7 +160,6 @@ You can add a Streamlit toggle later for UI control.
 👨‍💻 Author
 
 Vamsi Kalyan Reddy
-📧 kalyanvamsi202000@gmail.com
 🌍 Canada / India
 🎓 Data Engineer • AI-for-Good Enthusiast
 
