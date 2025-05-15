@@ -1,177 +1,181 @@
-# 🤖 AI Buddy for Kids (WhatsApp + Gemini + Streamlit)
+# 🧠 AI Buddy for Kids
 
-A friendly AI-powered WhatsApp buddy that chats with children, tracks their moods, creates personalized summaries, and alerts caregivers when emotional help might be needed.
-
-> 💡 Built for underprivileged children, NGOs, and school wellness programs.
+An open-source, social-impact AI project designed to support the **emotional well-being of underprivileged children** via WhatsApp. The goal is to create a child-friendly AI companion that can chat daily, understand personality traits, detect mood trends, and alert caregivers if sadness is detected repeatedly.
 
 ---
 
-## 🎯 Project Goals
+## 🔧 Key Features
 
-- Encourage emotional self-expression in children
-- Track moods gently and respectfully over time
-- Alert caregivers when sadness or risk patterns appear
-- Deliver this entirely over WhatsApp — no apps or logins
-
----
-
-## 🧠 Features
-
-- ✅ 5-question personality quiz (Gemini-generated)
-- ✅ 6th mood check-in question with AI-inferred emotion
-- ✅ Personality summary powered by Gemini 1.5 Flash
-- ✅ Mood + intent classification
-- ✅ Alert system (e.g., 2+ sad moods = trigger)
-- ✅ SQLite for local, structured logging
-- ✅ Streamlit dashboard + Gemini-powered chatbot
-- ✅ Zero monthly cost: runs locally with ngrok
+* 📱 **WhatsApp Chatbot** (via Twilio + Flask)
+* 🎨 **AI-generated Personality Quiz** (randomized, child-safe)
+* 🌤️ **Daily Mood Check-in** with Gemini-based inference
+* 🧠 **Positive Personality Summary Generation**
+* 💾 **SQLite Logging** with mood, message, intent & timestamps
+* 🚨 **Sad Mood Detection & Alerting System**
+* 📊 **Streamlit Dashboard** for teachers/volunteers
+* 🤖 **Gemini-powered SQL Chatbot** for querying the mood database
 
 ---
 
-## 📦 Folder Structure
+## 📁 Folder Structure
 
-<pre>
-
-📁 ai-buddy-for-kids/
+```
+ai-buddy-for-kids/
 ├── backend/
-│   ├── app.py               # Flask app, Twilio integration
-│   ├── gemini_agent.py      # Gemini prompt logic
-│   ├── mood_logs.db         # SQLite DB (auto-created)
-│   └── settings.json        # Mode switch (quiz / mood_checkin)
+│   ├── app.py               # Main Flask + Twilio interaction
+│   ├── gemini_agent.py      # Gemini prompt handling and logic
+│   ├── settings.json        # Mode toggle (quiz / mood_checkin)
+│   └── mood_logs.db         # SQLite DB (auto-created)
 ├── dashboard/
-│   └── streamlit_app.py     # Streamlit dashboard + chatbot
-├── .env                     # API keys (excluded from Git)
+│   └── streamlit_app.py     # Teacher-facing mood dashboard
+├── .env                     # Secrets for Gemini & Twilio (not committed)
 ├── .gitignore
-├── requirements.txt
-└── README.md
-
-</pre>
+├── requirements.txt         # All dependencies
+├── README.md
+└── PROJECT_OVERVIEW.md      # Contribution-oriented guide
+```
 
 ---
 
-## 🚀 How to Run the App
+## 🧠 How It Works
 
-### 1. 📦 Install dependencies
+1. **Child sends a message on WhatsApp**
+2. **AI buddy replies with quiz/mood question**
+3. **Gemini generates personality insights + detects mood**
+4. **All chats are stored in SQLite**
+5. **Alerts are raised if multiple "sad" moods are detected**
+6. **Dashboard shows logs, summaries, alerts, trends**
+
+---
+
+## 🧰 Tech Stack
+
+| Layer      | Tech Used                  |
+| ---------- | -------------------------- |
+| Backend    | Flask, Twilio, SQLite      |
+| AI Engine  | Google Gemini (via API)    |
+| Frontend   | Streamlit (for dashboard)  |
+| Scheduler  | Python `schedule` (manual) |
+| Deployment | Localhost + ngrok tunnel   |
+
+---
+
+## ⚙️ Local Setup
 
 ```bash
+git clone git@github.com:your-username/ai-buddy-for-kids.git
 cd ai-buddy-for-kids
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
+```
 
+Start the Flask server:
 
-⸻
-
-2. ⚙️ Start the Flask server
-
+```bash
 cd backend
 python app.py
+```
 
+Expose your local server to Twilio:
 
-⸻
-
-3. 🌐 Start ngrok to expose your local server
-
+```bash
 ngrok http http://127.0.0.1:5000
+```
 
-Copy the HTTPS URL and paste it into the Twilio Sandbox Webhook for inbound messages.
+Run the dashboard:
 
-⸻
-
-4. 📲 Test on WhatsApp
-
-From your registered Twilio sandbox WhatsApp number, send:
-
-Hi
-
-AI Buddy will:
-	•	Start a quiz or mood check-in (based on mode)
-	•	Log answers
-	•	Respond using Gemini-generated replies
-
-⸻
-
-📊 How to Launch the Dashboard
-
-In a new terminal:
-
+```bash
 cd dashboard
 streamlit run streamlit_app.py
+```
 
-Visit http://localhost:8501 to view:
-	•	All mood logs
-	•	Mood frequency bar chart (filtered to step 5)
-	•	Alert history
-	•	Gemini-powered SQL chatbot
+---
 
-⸻
+## 🔀 Mode Switching (Quiz vs Mood Check-in)
 
-🗃️ Database Structure
+Edit `backend/settings.json` to switch modes:
 
-mood_logs Table
-
-Field	Type	Description
-user_id	TEXT	WhatsApp number
-message	TEXT	Message content
-step	INT	Step number (0–5) or 999 for summary
-direction	TEXT	‘user’ or ‘bot’
-mood	TEXT	Inferred mood from Gemini (optional)
-intent	TEXT	Inferred intent (optional)
-timestamp	TEXT	ISO datetime
-
-alerts Table
-
-Field	Type	Description
-user_id	TEXT	WhatsApp number
-reason	TEXT	Reason for alert (e.g. sad x2)
-timestamp	TEXT	Time of alert
-
-
-⸻
-
-⚙️ Project Modes (Quiz vs Mood Check)
-
-Edit backend/settings.json to switch modes:
-
+```json
 {
   "mode": "quiz"
 }
+```
 
-Or:
+or:
 
+```json
 {
   "mode": "mood_checkin"
 }
+```
 
-You can add a Streamlit toggle later for UI control.
+---
 
-⸻
+## 🗃️ Database Schema
 
-🔒 To-Do (Next Features)
-	•	Add login to dashboard for teachers
-	•	Upgrade personality question quality
-	•	Auto daily reminders via script
-	•	CSV / Excel export
-	•	Streamlit Cloud or Render deployment
-	•	Parental dashboard with child summaries
+### mood\_logs
 
-⸻
+| Column    | Type    | Description                     |
+| --------- | ------- | ------------------------------- |
+| user\_id  | TEXT    | WhatsApp number                 |
+| message   | TEXT    | Message content                 |
+| step      | INTEGER | Step number in quiz / mood      |
+| direction | TEXT    | 'user' or 'bot'                 |
+| mood      | TEXT    | Inferred mood (if applicable)   |
+| intent    | TEXT    | Inferred intent (if applicable) |
+| timestamp | TEXT    | ISO timestamp                   |
 
-👨‍💻 Author
+### alerts
 
-Vamsi Kalyan Reddy
-🌍 Canada / India
-🎓 Data Engineer • AI-for-Good Enthusiast
+| Column    | Type | Description                       |
+| --------- | ---- | --------------------------------- |
+| user\_id  | TEXT | WhatsApp number                   |
+| reason    | TEXT | e.g. "Inferred sad mood 2+ times" |
+| timestamp | TEXT | Time of alert                     |
 
-⸻
+---
 
-🧡 Why This Matters
+## ✅ MVP Goals
 
-This project helps kids express themselves safely and lets caregivers track emotional health early — even in underserved communities. Built with empathy, AI, and zero cloud cost.
+* [x] WhatsApp-based personality quiz
+* [x] Mood tracking with SQLite
+* [x] Alert system if child reports "sad" multiple times
+* [x] Teacher-facing dashboard with visualizations
+* [x] AI assistant to run SQL queries via Gemini
 
-⸻
+---
 
-“The most important thing in communication is hearing what isn’t said.” — Peter Drucker
+## 🗓️ Roadmap
 
-```markdown
-📘 [Read the full project overview →](PROJECT_OVERVIEW.md)
+* [ ] User profile system with multi-session tracking
+* [ ] Dashboard logins for teachers/NGO staff
+* [ ] Advanced prompt tuning for richer summaries
+* [ ] Support for multiple languages (Hindi, Telugu, etc.)
+* [ ] Deploy on Render or Streamlit Cloud
+* [ ] Add export to CSV / PDF features
+
+---
+
+## 🤝 Contributions Welcome
+
+If you're a developer, psychologist, teacher, or AI enthusiast interested in helping children through technology, feel free to fork this repo or submit a pull request.
+
+---
+
+## 📬 Contact
+
+**Author:** Vamsi Kalyan Reddy
+**Location:** Canada / India
+
+---
+
+## ❤️ Why This Matters
+
+This project is created with the intention to:
+
+* Give children a voice
+* Help educators detect early signs of distress
+* Explore how GenAI can assist in real-world emotional wellness
+
+**AI should heal, not harm. Let’s build something that matters.**
