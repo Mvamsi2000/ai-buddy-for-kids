@@ -1,15 +1,3 @@
-Great point — you deserve a clean, GitHub-perfect README.md from the start.
-
-Here’s the complete updated version with:
-
-✅ Clean folder structure
-✅ Professional formatting
-✅ All features and setup steps
-✅ Ready to paste directly into GitHub
-
-⸻
-
-
 # 🤖 AI Buddy for Kids (WhatsApp + Gemini + Streamlit)
 
 A friendly AI-powered WhatsApp buddy that chats with children, tracks their moods, creates personalized summaries, and alerts caregivers when emotional help might be needed.
@@ -185,9 +173,3 @@ This project helps kids express themselves safely and lets caregivers track emot
 ⸻
 
 “The most important thing in communication is hearing what isn’t said.” — Peter Drucker
-
----
-
-✅ Now it will render **beautifully on GitHub** with clear spacing, bullet points, and a solid layout.
-
-Let me know if you want a badge-enhanced version (with GitHub stars, Python version, etc.) or a `docs/` version for PDF or portfolio export!
