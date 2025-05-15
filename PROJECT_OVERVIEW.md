@@ -1,153 +1,169 @@
-# 🧠 AI Buddy for Kids — Project Overview & Contribution Guide
+# 🧠 Project Overview — AI Buddy for Kids
 
-A real-world, social impact AI project that uses WhatsApp and Google Gemini to help children express emotions, track mood trends, and alert caregivers when emotional help may be needed.
+This is a **social-impact AI project** built to support children (especially those in low-income or orphanage settings) by providing a caring, psychologically-aware chatbot via WhatsApp.
 
 ---
 
 ## 🎯 Purpose
 
-To build a friendly, psychologically supportive AI that:
-- Helps children express their feelings naturally
-- Tracks emotional patterns over time
-- Notifies teachers or caregivers if sadness or risk trends appear
-- Works entirely over WhatsApp — no app installs needed
+- Promote emotional expression in children through guided conversations
+- Track emotional states using AI-generated insights
+- Alert caregivers when patterns of sadness or emotional distress appear
+- Work entirely through WhatsApp to remove access barriers — no app installs, logins, or devices required
 
 ---
 
-## 👥 Who Is This For?
+## 👤 Target Users
 
-- 💻 Backend / AI engineers
-- 🎨 UX designers for social tech
-- 🧑‍🏫 Teachers and NGOs working with kids
-- 🤝 Contributors who want to work on AI for Good
-
----
-
-## 🚀 Key Features
-
-- 🌈 Personality quiz (5 random, child-friendly questions)
-- 🌤️ Mood check-in as a 6th question
-- ✨ Gemini-generated summary of personality
-- 🧠 AI mood + intent classification
-- 🚨 Sad mood alert system (2+ sad answers)
-- 📊 Streamlit dashboard with mood trends + chatbot
-- 💬 SQL chatbot (query moods, alerts, logs)
-- 💾 Modular, local-first (SQLite + ngrok + Flask)
+- Children from underprivileged or high-risk backgrounds
+- Teachers and volunteers at schools or NGOs
+- Mental wellness professionals working in low-resource settings
+- AI/tech contributors who want to build for good
 
 ---
 
-## 🧱 System Architecture
+## 🧠 Key Features
 
-Twilio WhatsApp
-↕
-Flask Server (app.py)
-↕
-Gemini API + SQLite DB
-↕
-Streamlit Dashboard (dashboard/streamlit_app.py)
+| Feature                        | Description                                                   |
+|-------------------------------|---------------------------------------------------------------|
+| 📱 WhatsApp Interface          | Chat with the child directly over WhatsApp (via Twilio)       |
+| 🎨 Personality Quiz            | Gemini generates 5 random questions (psychologically guided)  |
+| 🌤️ Mood Check-in              | Final 6th question captures emotional state                   |
+| 🧠 Gemini Summarization        | Personality summary after quiz completion                    |
+| 📊 Mood Inference             | Inferred mood + intent stored via Gemini                     |
+| 🚨 Sadness Alerts              | Trigger if 2+ “sad” responses over multiple check-ins         |
+| 📂 Local Database              | SQLite structured logging                                     |
+| 🖥️ Streamlit Dashboard        | Teacher/volunteer view of mood logs, alerts, summaries        |
+| 🤖 Gemini SQL Chatbot         | Ask dashboard questions (e.g. “when was this child sad?”)     |
 
 ---
 
-## 📂 Project Structure
+## 📦 Folder Structure
 
 <pre>
 
-📦 ai-buddy-for-kids/
+📁 ai-buddy-for-kids/
 ├── backend/
-│   ├── app.py               # Flask app for WhatsApp + logging
-│   ├── gemini_agent.py      # Gemini API logic (summary, mood, Qs)
-│   ├── mood_logs.db         # SQLite DB (auto created)
-│   └── settings.json        # Mode toggle: quiz / mood_checkin
+│   ├── app.py               # Flask + Twilio core logic
+│   ├── gemini_agent.py      # Gemini-based personality, mood, summary logic
+│   ├── mood_logs.db         # SQLite data store (auto-created)
+│   └── settings.json        # Switch between quiz/mood_checkin modes
 ├── dashboard/
-│   └── streamlit_app.py     # Dashboard UI + SQL chatbot
+│   └── streamlit_app.py     # Streamlit dashboard + Gemini SQL assistant
 ├── .env                     # API keys (excluded from Git)
 ├── .gitignore
 ├── requirements.txt
-├── README.md
-└── PROJECT_OVERVIEW.md
+└── README.md
 
 </pre>
 
 ---
 
-## 🔄 Mode Switching
+## 🧱 Architecture Overview
 
-Use `backend/settings.json` to control the interaction type:
+WhatsApp (Twilio)
+↕
+Flask Server (app.py)
+↕
+Gemini API + SQLite
+↕
+Streamlit Dashboard (teacher/volunteer view)
+
+---
+
+## 🗃️ Database Schema
+
+### mood_logs
+
+| Column     | Type    | Description                                 |
+|------------|---------|---------------------------------------------|
+| user_id    | TEXT    | WhatsApp number                             |
+| message    | TEXT    | Message content                             |
+| step       | INTEGER | Step number in quiz / mood                  |
+| direction  | TEXT    | 'user' or 'bot'                             |
+| mood       | TEXT    | Inferred mood (if applicable)               |
+| intent     | TEXT    | Inferred intent (if applicable)             |
+| timestamp  | TEXT    | ISO timestamp                               |
+
+### alerts
+
+| Column     | Type    | Description                                 |
+|------------|---------|---------------------------------------------|
+| user_id    | TEXT    | WhatsApp number                             |
+| reason     | TEXT    | e.g. “Inferred sad mood 2+ times”           |
+| timestamp  | TEXT    | When alert was logged                       |
+
+---
+
+## 🔀 Modes of Operation
+
+Controlled by `backend/settings.json`:
 
 ```json
 {
   "mode": "quiz"
 }
 
-Change to "mood_checkin" for daily check-in only.
+Other option:
 
-Future: Add a Streamlit toggle for this mode control.
+{
+  "mode": "mood_checkin"
+}
 
-⸻
-
-📊 Database Tables
-
-mood_logs
-
-Column	Type	Description
-user_id	TEXT	WhatsApp number
-message	TEXT	User or bot message
-step	INT	Quiz step or 999 for summary
-direction	TEXT	‘user’ or ‘bot’
-mood	TEXT	AI-inferred mood (if any)
-intent	TEXT	AI-inferred intent (optional)
-timestamp	TEXT	ISO format timestamp
-
-alerts
-
-Column	Type	Description
-user_id	TEXT	WhatsApp number
-reason	TEXT	e.g. “Inferred sad mood 2+ times”
-timestamp	TEXT	Time alert was triggered
-
+You can flip this manually or build a toggle in the dashboard later.
 
 ⸻
 
-🧠 AI Logic Modules
+👨‍💻 How to Contribute
 
-gemini_agent.py
-	•	get_personality_questions() → 5 randomized quiz questions
-	•	get_gemini_summary() → Personality summary from answers
-	•	get_inferred_mood(text) → Returns mood (“Happy”, “Sad”, etc.)
-	•	get_inferred_intent(text) → Returns purpose of text (“Greeting”, “Question”, etc.)
+We welcome thoughtful contributions, especially in areas like:
+
+🧠 Prompt Engineering
+	•	Improve Gemini question phrasing and summary structure
+	•	Add age-specific or trauma-informed question banks
+
+📊 Data Visualization
+	•	Add timeline charts, sentiment trackers, word clouds
+	•	Dashboard enhancements for child-specific views
+
+💻 Backend / Engineering
+	•	Add teacher logins or authentication for dashboards
+	•	Move SQLite to Postgres or cloud for production
+	•	Add SMS fallback or Telegram support
+
+🌍 Language Support / Accessibility
+	•	Translate questions to local languages
+	•	Add voice input/output (Twilio supports TTS)
 
 ⸻
 
-📈 Streamlit Dashboard Features
-	•	Mood frequency chart
-	•	Mood logs viewer (filtered by step or mood)
-	•	Alert history
-	•	Gemini chatbot (asks and converts questions to SQL)
+🧪 Sample Contributions
+	•	Improve mood classification prompt
+	•	Auto-trigger alerts to teachers via email
+	•	Add CSV export button to dashboard
+	•	Deploy on Render or Streamlit Cloud
+	•	Schedule check-ins with a cron + Twilio script
 
 ⸻
 
-🔧 Setup Instructions
+✅ Development Setup
 
-1. Clone the project and install dependencies:
-
-git clone https://github.com/YOUR_USERNAME/ai-buddy-for-kids.git
+git clone git@github.com:your-username/ai-buddy-for-kids.git
 cd ai-buddy-for-kids
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 
-2. Run Flask server (WhatsApp bot):
+Start Flask:
 
 cd backend
 python app.py
 
-3. Run ngrok to expose Flask:
+Expose with ngrok:
 
 ngrok http http://127.0.0.1:5000
 
-Paste the ngrok HTTPS URL in your Twilio sandbox webhook.
-
-4. Run dashboard:
+Start Streamlit dashboard:
 
 cd dashboard
 streamlit run streamlit_app.py
@@ -155,53 +171,17 @@ streamlit run streamlit_app.py
 
 ⸻
 
-🧪 Example Flow
-
-User: Hi 👋
-Bot: Question 1: If you could have any animal as a pet, what would it be?
-...
-User: Sad
-Bot logs mood = "Sad", intent = "MoodUpdate"
-If 2+ sad responses → 🚨 Alert inserted
-
-
-⸻
-
-🛠️ Suggested Contribution Areas
-
-Area	Tasks You Can Help With
-AI prompts	Better questions, better summaries
-Dashboard UI	Login system, visual polish, export options
-Scheduler	Daily check-in script (Twilio + cron or schedule)
-Data design	Move from SQLite to Firebase/PostgreSQL
-NLP	Improve mood/intent classification
-Analytics	More advanced emotional trend tracking
-
-
-⸻
-
-🤝 How to Contribute
-	1.	Fork this repo
-	2.	Clone it and create a new branch
-	3.	Submit a pull request with clear explanation
-	4.	Bonus: Open an issue if you have questions or feature ideas
-
-⸻
-
-📫 Contact
+📫 Author
 
 Vamsi Kalyan Reddy
-📧 kalyanvamsi202000@gmail.com
-🌐 Canada / India | Open to meaningful collaboration
+🌍 Canada / India
 
 ⸻
 
 ❤️ Why This Matters
 
-Not every child has someone to talk to — but with the right AI, we can at least make sure they’re heard, seen, and supported.
+AI can be more than just a tool — it can be a friend, a listener, and a safety net. This project gives a voice to children and eyes to those who care for them.
 
-“Mental health starts with listening. Even if it’s a bot — listening matters.”
+Let’s build AI that protects, not replaces — and supports, not judges.
 
-⸻
-
-
+---

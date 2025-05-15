@@ -172,3 +172,6 @@ This project helps kids express themselves safely and lets caregivers track emot
 ⸻
 
 “The most important thing in communication is hearing what isn’t said.” — Peter Drucker
+
+```markdown
+📘 [Read the full project overview →](PROJECT_OVERVIEW.md)
